@@ -67,7 +67,7 @@ def post_create(request):
     form = PostForm(
         request.POST or None,
         files=request.FILES or None,
-        )
+    )
     if request.method == 'POST':
         if form.is_valid():
             post = form.save(commit=False)
@@ -90,7 +90,7 @@ def post_edit(request, post_id):
         request.POST or None,
         files=request.FILES or None,
         instance=post
-        )
+    )
     if form.is_valid():
         post = form.save()
         post.save()
