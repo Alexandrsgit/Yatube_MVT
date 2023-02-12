@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load cache %}
+{% block title %}
+Последние обновления на сайте
+{% endblock %}
+{% block header %}
+<p></p><h1 align="center"> Последние обновления на сайте </h1>
+{% endblock %}
+{% block content %}
+{% include 'posts/includes/switcher.html' %}
+{% cache 20 index_page %}
+{% for post in page_obj %}
+<hr>
+  <ul>
+    <li>
+      <b> Автор: </b> {{ post.author.get_full_name }} <a href="{% url 'posts:profile' post.author.username %}"> Все посты пользователя </a>
+    </li>
+    <li>
+      <b> Дата публикации: </b> {{ post.pub_date|date:"d E Y" }} 
+    </li>
+    <li>
+      <b> Группа: </b> {{ post.group.title }} 
+      {% if post.group %} 
+        <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы</a>
+      {% endif %}
+    </li>
+  </ul>
+  {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+  <img class="card-img my-2" src="{{ im.url }}">
+  {% endthumbnail %}
+  <p>{{ post.text }}</p>
+  <button type="button" class="btn btn-primary">
+  <a class="nav-link link-light" href="{% url 'posts:post_detail' post.pk %}"> Подробная информация </a>
+  </button>
+  <p></p>
+{% if not forloop.last %}
+{% endif %}
+<p></p>
+{% endfor %}
+{% endcache %}
+{% include 'posts/includes/paginator.html' %}
+{% endblock %}

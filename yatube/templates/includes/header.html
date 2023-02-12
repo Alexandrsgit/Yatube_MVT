@@ -1,0 +1,49 @@
+{% load static %}
+<nav class="navbar navbar-light" style="background-color: lightskyblue">
+  <style>
+    .layer2 {
+      padding: 10px;
+    }
+  </style>
+  <div class="layer2">
+    <a class="navbar-brand" href="{% url 'posts:index' %}">
+        <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block aligne-left padding: 10px">
+        <span style="color:red"><b>Ya</b></span><span style="color:black"><b>tube</b></span>
+    </a>
+    {% if user.is_authenticated %}
+    <div class="btn-group">
+    <button type="button" class="btn btn-primary" style="background-color: lightskyblue">
+      <a class="nav-link link-dark" href="{% url 'posts:post_create' %}">Новая запись</a>
+    </button>
+    <button type="button" class="btn btn-primary"  style="background-color: lightskyblue">
+      <a class="nav-link link-dark" href="{% url 'about:author' %}">Об авторе</a>
+    </button>
+    <button type="button" class="btn btn-primary"  style="background-color: lightskyblue">
+      <a class="nav-link link-dark" href="{% url 'about:tech' %}">Технологии</a>
+    </button>
+    </div>
+    {% endif %}
+  </div>
+  <div class="layer2"> 
+{% if user.is_authenticated %}
+    <button type="button" class="btn">
+      <a class="nav-link link-dark" href="{% url 'posts:profile' user.username %}">Вы вошли как: <b>{{ user.username }}</b></a>
+    </button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" style="background-color: lightskyblue">
+        <a class="nav-link link-dark" href="{% url 'users:password_change' %}">Изменить пароль</a>
+      </button>
+      <button type="button" class="btn btn-primary" style="background-color: lightskyblue">
+        <a class="nav-link link-dark" href="{% url 'users:logout' %}">Выйти</a>
+    </button>
+    </div class="btn-group">
+{% else %}
+    <button type="button" class="btn">
+      Вы вошли как: <b>Гость</b>
+    </button>
+    <button type="button" class="btn btn-primary" style="background-color: lightskyblue">
+      <a class="nav-link link-dark" href="{% url 'users:login' %}">Авторизоваться</a>
+    </button>
+{% endif %}
+  </div>
+</nav>
