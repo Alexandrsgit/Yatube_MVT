@@ -44,6 +44,7 @@ class PostPagesTest(TestCase):
             text='Тестовый текст',
             author=cls.user,
             image=uploaded,
+            group=cls.group,
         )
         cls.comment = Comment.objects.create(
             text='Тестовый коммент',
@@ -77,6 +78,7 @@ class PostPagesTest(TestCase):
         self.user3 = User.objects.create_user(username='unfollower')
         self.unfollower_client = Client()
         self.unfollower_client.force_login(self.user3)
+        cache.clear()
 
     def test_views_have_correct_template(self):
         """URL-адрес posts использует соотвествующимй шаблон."""
@@ -125,6 +127,7 @@ class PostPagesTest(TestCase):
         self.assertEqual(response.context.get('group').description,
                          self.group.description)
         first_object = response.context['page_obj'][0]
+        print(first_object)
         post_text_0 = first_object.text
         post_author_0 = first_object.author
         post_image_0 = first_object.image

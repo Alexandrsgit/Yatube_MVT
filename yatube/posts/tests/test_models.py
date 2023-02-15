@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from ..models import Group, Post
+from ..models import Group, Post, Comment, Follow
 
 
 User = get_user_model()
@@ -11,6 +11,7 @@ class PostModelTest(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.user = User.objects.create_user(username='auth')
+        cls.user2 = User.objects.create_user(username='user2')
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='Тестовый slug',
@@ -18,6 +19,14 @@ class PostModelTest(TestCase):
         )
         cls.post = Post.objects.create(
             text='A' * 20,
+            author=cls.user,
+        )
+        cls.comment = Comment.objects.create(
+            text='Тестовый текст комментария',
+            author=cls.user2,
+        )
+        cls.follow = Follow.objects.create(
+            user=cls.user2,
             author=cls.user,
         )
 
@@ -39,6 +48,7 @@ class PostModelTest(TestCase):
             'pub_date': 'Дата публикации',
             'author': 'Автор',
             'group': 'Группа',
+            'image': 'Картинка',
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
@@ -64,6 +74,7 @@ class PostModelTest(TestCase):
         field_help_text = {
             'text': 'Введите текст поста',
             'group': 'Выбирите группу',
+            'image': 'Загрузите изображение',
         }
         for field, expected_value in field_help_text.items():
             with self.subTest(field=field):
@@ -81,4 +92,54 @@ class PostModelTest(TestCase):
             with self.subTest(field=field):
                 self.assertEqual(
                     PostModelTest.group._meta.get_field(field).help_text,
+                    expected_value)
+
+    def test_vebose_name_comment(self):
+        """Тестирование verbose_name для Comment."""
+        field_verboses = {
+            'text': 'Комментарий',
+            'author': 'Автор',
+            'post': 'Пост',
+            'created': 'Дата комментария',
+        }
+        for field, expected_value in field_verboses.items():
+            with self.subTest(field=field):
+                self.assertEqual(
+                    PostModelTest.comment._meta.get_field(field).verbose_name,
+                    expected_value)
+
+    def test_verbose_name_follow(self):
+        """Тестирование verbose_name для Follow."""
+        field_verbose = {
+            'user': 'Пользователь',
+            'author': 'Избранный автор',
+        }
+        for field, expected_value in field_verbose.items():
+            with self.subTest(field=field):
+                self.assertEqual(
+                    PostModelTest.follow._meta.get_field(field).verbose_name,
+                    expected_value)
+
+    def test_help_text_comment(self):
+        """Тестирование help_text для Comment."""
+        field_help_text = {
+            'text': 'Введите комментарий',
+            'created': 'Укажите дату',
+        }
+        for field, expected_value in field_help_text.items():
+            with self.subTest(field=field):
+                self.assertEqual(
+                    PostModelTest.comment._meta.get_field(field).help_text,
+                    expected_value)
+
+    def test_help_text_follow(self):
+        """Тестирование help_text для Follow."""
+        field_help_test = {
+            'user': 'Укажите пользователя',
+            'author': 'Укажите автора поста',
+        }
+        for field, expected_value in field_help_test.items():
+            with self.subTest(field=field):
+                self.assertEqual(
+                    PostModelTest.follow._meta.get_field(field).help_text,
                     expected_value)

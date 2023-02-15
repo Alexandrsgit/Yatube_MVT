@@ -56,12 +56,25 @@ class Comment(models.Model):
     text = models.TextField(verbose_name='Комментарий',
                             help_text='Введите комментарий')
     created = models.DateTimeField(auto_now_add=True,
-                                   verbose_name='Дата комментария')
+                                   verbose_name='Дата комментария',
+                                   help_text='Укажите дату')
 
 
 class Follow(models.Model):
     """Модель подписки на автора."""
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='follower', null=True)
+                             related_name='follower', null=True,
+                             verbose_name='Пользователь',
+                             help_text='Укажите пользователя')
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='following', null=True)
+                               related_name='following', null=True,
+                               verbose_name='Избранный автор',
+                               help_text='Укажите автора поста')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_follower'
+            )
+        ]

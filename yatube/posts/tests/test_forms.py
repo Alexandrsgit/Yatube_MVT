@@ -7,6 +7,7 @@ import shutil
 import tempfile
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.cache import cache
 
 
 from django.contrib.auth import get_user_model
@@ -36,6 +37,7 @@ class PostFormTest(TestCase):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        cache.clear()
 
     def test_create_post(self):
         """Тестируем форму создания поста."""

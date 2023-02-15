@@ -18,7 +18,8 @@ def index(request):
 def group_posts(request, slug):
     """Функция запроса страницы Group."""
     group = get_object_or_404(Group, slug=slug)
-    post_list = Post.objects.all()
+    post_list = group.posts.all()
+    print(post_list)
     page_obj = page_obj_func(post_list, request)
     context = {
         'group': group, 'page_obj': page_obj,
@@ -31,12 +32,12 @@ def profile(request, username):
     """Функция отображения профиля пользователя."""
     authuser = get_object_or_404(User, username=username)
     getcount = Post.objects.filter(author__username=username)
-    post_list = Post.objects.filter(author=authuser)
+    post_list = authuser.posts.all()
     page_obj = page_obj_func(post_list, request)
     following = authuser.following.filter(
         user=request.user.id,
         author=authuser,
-    ).exists
+    ).exists()
     context = {
         'authuser': authuser,
         'getcount': getcount,
@@ -83,7 +84,6 @@ def post_create(request):
 def post_edit(request, post_id):
     """Функция для редактирования поста."""
     post = get_object_or_404(Post, id=post_id)
-    is_edit = True
     if post.author != request.user:
         return redirect('posts:post_detail', post_id)
     form = PostForm(
@@ -98,7 +98,7 @@ def post_edit(request, post_id):
     context = {
         'form': form,
         'post': post,
-        'is_edit': is_edit,
+        'is_edit': True,
     }
     return render(request, 'posts/post_create.html', context)
 
