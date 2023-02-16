@@ -142,7 +142,7 @@ class PostPagesTest(TestCase):
                                                               username}))
         self.assertEqual(response.context.get('authuser').username,
                          self.user.username)
-        self.assertEqual(response.context.get('getcount').count(),
+        self.assertEqual(response.context.get('post_list').count(),
                          self.post.author.posts.count())
         first_object = response.context['page_obj'][0]
         post_text_0 = first_object.text

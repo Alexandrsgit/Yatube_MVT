@@ -30,7 +30,6 @@ def group_posts(request, slug):
 def profile(request, username):
     """Функция отображения профиля пользователя."""
     authuser = get_object_or_404(User, username=username)
-    getcount = Post.objects.filter(author__username=username)
     post_list = authuser.posts.all()
     page_obj = page_obj_func(post_list, request)
     following = authuser.following.filter(
@@ -39,7 +38,7 @@ def profile(request, username):
     ).exists()
     context = {
         'authuser': authuser,
-        'getcount': getcount,
+        'post_list': post_list,
         'page_obj': page_obj,
         'following': following,
     }
