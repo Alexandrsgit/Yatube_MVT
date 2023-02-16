@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Group, Post, User, Comment, Follow
+from .models import Group, Post, User, Follow
 from .forms import PostForm, CommentForm
 from utils import page_obj_func
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,6 @@ def group_posts(request, slug):
     """Функция запроса страницы Group."""
     group = get_object_or_404(Group, slug=slug)
     post_list = group.posts.all()
-    print(post_list)
     page_obj = page_obj_func(post_list, request)
     context = {
         'group': group, 'page_obj': page_obj,
@@ -50,12 +49,10 @@ def profile(request, username):
 def post_detail(request, post_id):
     """Функция для отображения детальной информации поста."""
     postdetail = get_object_or_404(Post, id=post_id)
-    post_all = Post.objects.all()
     form = CommentForm(request.POST or None)
-    comments = Comment.objects.filter(post=post_id)
+    comments = postdetail.comment.all()
     context = {
         'postdetail': postdetail,
-        'post_all': post_all,
         'form': form,
         'comments': comments,
     }

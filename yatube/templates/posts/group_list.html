@@ -5,14 +5,13 @@
 {% endblock %}
 {% block header %}
 <p>
-  <h1> {{group.title}} </h1>
+  <h1> {{ group.title }} </h1>
 </p>
 {% endblock %}
 {% block content %}
 <h5><p>{{ group.description }}</p></h5>
 <p></p>
 {% for post in page_obj %}
-{% if post.group.title == group.title %}
 <hr>
   <ul>
     <li>
@@ -27,7 +26,6 @@
   {% endthumbnail %}
     <p>{{ post.text }}</p>
       <a href="{% url 'posts:post_detail' post.pk %}"> Подробная информация </a>
-  {% endif %}
   {% if not forloop.last %}{% endif %}
   <p></p>
 {% endfor %}

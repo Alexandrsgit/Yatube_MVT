@@ -127,7 +127,6 @@ class PostPagesTest(TestCase):
         self.assertEqual(response.context.get('group').description,
                          self.group.description)
         first_object = response.context['page_obj'][0]
-        print(first_object)
         post_text_0 = first_object.text
         post_author_0 = first_object.author
         post_image_0 = first_object.image
@@ -159,7 +158,7 @@ class PostPagesTest(TestCase):
                                               kwargs={'post_id':
                                                       self.post.id}))
         self.assertEqual(response.context.get('postdetail').id, self.post.id)
-        first_object = response.context['post_all'][0]
+        first_object = response.context['postdetail']
         post_text_0 = first_object.text
         post_author_0 = first_object.author
         post_id_0 = first_object.id

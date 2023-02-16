@@ -1,47 +1,39 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
 {% block title %}
-{% for post in post_all %}
-{% if post.id == postdetail.id %}
-{{ post.text|truncatechars:30 }}
-{% endif %}
-{% endfor %}
+{{ postdetail.text|truncatechars:30 }}
 {% endblock %}
 {% block content %}
-{% for post in post_all %}
-{% if post.id == postdetail.id %}
 <hr>
   <ul> 
     <li>
-      <b> Дата публикации: </b> {{ post.pub_date|date:"d E Y" }} 
+      <b> Дата публикации: </b> {{ postdetail.pub_date|date:"d E Y" }} 
     </li>
     <li>
-      <b> Группа: </b> {{ post.group.title}} 
-      {% if post.group %} 
-        <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы</a>
+      <b> Группа: </b> {{ postdetail.group.title }} 
+      {% if postdetail.group %} 
+        <a href="{% url 'posts:group_list' postdetail.group.slug %}">Все записи группы</a>
       {% endif %}
     </li>
     <li>
-      <b> Автор: </b> {{ post.author.get_full_name }} <a href="{% url 'posts:profile' post.author.username %}"> Все посты пользователя </a> 
+      <b> Автор: </b> {{ postdetail.author.get_full_name }} <a href="{% url 'posts:profile' postdetail.author.username %}"> Все посты пользователя </a> 
     </li>
     <li>
-      <b> Всего постов: </b> {{ post.author.posts.count }} 
+      <b> Всего постов: </b> {{ postdetail.author.posts.count }} 
     </li>
   </ul>
-  {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+  {% thumbnail postdetail.image "960x339" crop="center" upscale=True as im %}
   <img class="card-img my-2" src="{{ im.url }}">
   {% endthumbnail %}
-  <p>{{ post.text }}</p>
-  {% if post.author.username == user.username %}
+  <p>{{ postdetail.text }}</p>
+  {% if postdetail.author.username == user.username %}
 <button type="button" class="btn btn-primary">
-  <a class="nav-link link-light" href="{% url 'posts:post_edit' post.pk %}">Редактировать</a>
+  <a class="nav-link link-light" href="{% url 'posts:post_edit' postdetail.pk %}">Редактировать</a>
 </button>
   {% endif %}
 {% include 'includes/add_comment.html' %}
-{% endif %}
 {% if not forloop.last %}
 {% endif %}
 <p></p>
-{% endfor %}
 {% include 'posts/includes/paginator.html' %}
 {% endblock %}
