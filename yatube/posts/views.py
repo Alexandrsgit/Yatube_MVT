@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     """Функция запроса главной страницы."""
-    post_list = Post.objects.all()
+    post_list = Post.objects.select_related('author').all()
     page_obj = page_obj_func(post_list, request)
     context = {
         'page_obj': page_obj,
@@ -18,7 +18,7 @@ def index(request):
 def group_posts(request, slug):
     """Функция запроса страницы Group."""
     group = get_object_or_404(Group, slug=slug)
-    post_list = group.posts.all()
+    post_list = group.posts.select_related('author').all()
     page_obj = page_obj_func(post_list, request)
     context = {
         'group': group, 'page_obj': page_obj,
@@ -49,7 +49,7 @@ def post_detail(request, post_id):
     """Функция для отображения детальной информации поста."""
     postdetail = get_object_or_404(Post, id=post_id)
     form = CommentForm(request.POST or None)
-    comments = postdetail.comment.all()
+    comments = postdetail.comment.select_related('author').all()
     context = {
         'postdetail': postdetail,
         'form': form,
@@ -115,7 +115,8 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     """Странница постов избранных авторов."""
-    post_list = Post.objects.filter(author__following__user=request.user)
+    post_list = Post.objects.select_related('author').filter(
+                author__following__user=request.user)
     page_obj = page_obj_func(post_list, request)
     context = {
         'page_obj': page_obj,
